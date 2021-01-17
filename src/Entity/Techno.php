@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Repository\TechnoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -41,6 +42,7 @@ class Techno
     /**
      * @ORM\ManyToMany(targetEntity=Experience::class, mappedBy="technos")
      * @Groups({"techno:read"})
+     * @ApiSubresource
      */
     private $experiences;
 

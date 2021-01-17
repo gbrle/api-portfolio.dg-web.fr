@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Repository\ExperienceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -70,6 +71,7 @@ class Experience
     /**
      * @ORM\ManyToMany(targetEntity=Techno::class, inversedBy="experiences", cascade="persist")
      * @Groups({"experience:read", "experience:write"})
+     * @ApiSubresource
      */
     private $technos;
 
