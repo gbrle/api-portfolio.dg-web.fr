@@ -75,6 +75,12 @@ class Experience
      */
     private $technos;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="experiences")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
     public function __construct()
     {
         $this->technos = new ArrayCollection();
@@ -177,6 +183,18 @@ class Experience
     public function removeTechno(Techno $techno): self
     {
         $this->technos->removeElement($techno);
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
