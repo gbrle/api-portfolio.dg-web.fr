@@ -71,6 +71,7 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Experience::class, mappedBy="user", orphanRemoval=true)
+     * @Groups({"user:read"})
      */
     private $experiences;
 

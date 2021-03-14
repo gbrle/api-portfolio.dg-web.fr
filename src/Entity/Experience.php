@@ -13,7 +13,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *     normalizationContext={"groups"={"experience:read"}},
- *     denormalizationContext={"groups"={"experience:write"}}
+ *     denormalizationContext={"groups"={"experience:write"}},
+ *     collectionOperations={
+ *         "get",
+ *         "post"={"security"="is_granted('ROLE_ADMIN')"}
+ *     },
+ *     itemOperations={
+ *         "get",
+ *         "put"={"security"="is_granted('ROLE_ADMIN')"},
+ *         "delete"={"security"="is_granted('ROLE_ADMIN')"},
+ *     }
  * )
  * @ORM\Entity(repositoryClass=ExperienceRepository::class)
  */
@@ -24,42 +33,45 @@ class Experience
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      *
-     * @Groups({"experience:read", "techno:read"})
+     * @Groups({"experience:read", "techno:read", "user:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      *
-     * @Groups({"experience:read", "experience:write", "techno:read"})
+     * @Groups({"experience:read", "experience:write", "techno:read", "user:read"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
      *
-     * @Groups({"experience:read", "experience:write", "techno:read"})
+     * @Groups({"experience:read", "experience:write", "techno:read", "user:read"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @var MediaObject|null
      *
-     * @Groups({"experience:read", "experience:write", "techno:read"})
+     * @ORM\ManyToOne(targetEntity=MediaObject::class)
+     * @ORM\JoinColumn(nullable=true)
+     * @Groups({"experience:read", "experience:write", "techno:read", "user:read"})
      */
     private $image;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * @Groups({"experience:read", "experience:write", "techno:read"})
+     * @Groups({"experience:read", "experience:write", "techno:read", "user:read"})
      */
     private $link;
 
     /**
      * @ORM\Column(type="date")
      *
-     * @Groups({"experience:read", "experience:write", "techno:read"})
+     * @Groups({"experience:read", "experience:write", "techno:read", "user:read"})
      */
     private $date;
 
@@ -70,7 +82,7 @@ class Experience
 
     /**
      * @ORM\ManyToMany(targetEntity=Techno::class, inversedBy="experiences", cascade="persist")
-     * @Groups({"experience:read", "experience:write"})
+     * @Groups({"experience:read", "experience:write", "user:read"})
      * @ApiSubresource
      */
     private $technos;

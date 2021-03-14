@@ -10,6 +10,7 @@ use App\Entity\Techno;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 
@@ -18,12 +19,14 @@ class ExperienceDataPersister implements ContextAwareDataPersisterInterface
     private $_entityManager;
     private $_slugger;
     private $_request;
+    private $_security;
 
-    public function __construct(EntityManagerInterface $entityManager, SluggerInterface $slugger, RequestStack $request)
+    public function __construct(EntityManagerInterface $entityManager, SluggerInterface $slugger, RequestStack $request, Security $security)
     {
         $this->_entityManager = $entityManager;
         $this->_slugger = $slugger;
         $this->_request = $request->getCurrentRequest();
+        $this->_security = $security;
     }
 
     public function supports($data, array $context = []): bool
@@ -39,6 +42,11 @@ class ExperienceDataPersister implements ContextAwareDataPersisterInterface
                 ->_slugger
                 ->slug($data->getTitle())
         );
+
+        // Set the author if it's a new article
+        if ($this->_request->getMethod() === 'POST') {
+            $data->setUser($this->_security->getUser());
+        }
 
 
         $technoRepository = $this->_entityManager->getRepository(Techno::class);
